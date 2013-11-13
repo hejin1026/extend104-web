@@ -1,0 +1,18 @@
+
+{% extends "term/layout.html" %}
+
+
+{% block content %}
+{% from "helper/_form.html" import render_field %}
+<form id="resetform" method="POST" action="{{ url_for('user.account') }}" class="form" style="margin-left:0px;">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.password) }}
+    {{ render_field(form.password_ack) }}
+    <div class="form-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">确定</button>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,230 @@
+
+{% extends "layout.html" %}
+
+{% block head %}
+   <link rel="stylesheet" href="/static/css/glances.css" type="text/css" media="all" />
+
+   <style type="text/css" media="screen">
+     body {
+       background-image: url('/static/img/glances-bg.png');
+     }
+
+     #glances-main {
+        color: #FFFFFF;
+       font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;
+     }
+   </style>
+{% endblock head %}
+
+
+
+{% block navbar %}
+{% from "admin/macros.html" import render_navbar %}
+{{ render_navbar('admin.system_monitor')}}
+{% endblock navbar %}
+
+   
+
+{% block main %}
+<div id="glances-main" class="span12" style=" ">
+  
+<section id="main">
+  <section id="firstline">
+    <article id="cpu">
+	{% if cpu is defined %}
+	<table>
+		<thead>
+		  <tr>
+		    <th scope="col" class="bgcpu fgcpu"></th>
+		    <th scope="col" class="bgcpu fgcpu">Cpu <small>{{ (cpu.user + cpu.system + cpu.nice)|round(1) }}%</small></th>
+		  </tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="bgcpu fgcpu">User</td>
+				<td class="{{ cpu.user_color }}">{{ cpu.user|round(1) }}</td>
+			</tr>
+			<tr>
+				<td class="bgcpu fgcpu">System</td>
+				<td class="{{ cpu.system_color }}">{{ cpu.system|round(1) }}</td>
+			</tr>
+			<tr>
+				<td class="bgcpu fgcpu">Nice</td>
+				<td class="{{ cpu.nice_color }}">{{ cpu.nice|round(1) }}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% endif %}
+
+    </article>
+    <article id="mem">
+	{% if (mem is defined) and (memswap is defined) %}
+	<table>
+		<thead>
+			<tr>
+				<th scope="col" class="bgmem fgmem"></th>
+				<th scope="col" class="bgmem fgmem">Mem</th>
+				<th scope="col" class="bgmem fgmem">Swap</th>
+				<th scope="col" class="bgmem fgmem">Real</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="bgmem fgmem">Total</td>
+				<td>{{ mem.total|filesizeformat(binary = true) }}</td>
+				<td>{{ memswap.total|filesizeformat(binary = true) }}</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="bgmem fgmem">Used</td>
+				<td>{{ mem.used|filesizeformat(binary = true) }}</td>
+				<td class="{{ memswap.used_color }}">{{ memswap.used|filesizeformat(binary = true) }}</td>
+				<td class="{{ mem.used_color }}">{{ mem.used|filesizeformat(binary = true) }}</td>
+			</tr>
+			<tr>
+				<td class="bgmem fgmem">Free</td>
+				<td>{{ mem.free|filesizeformat(binary = true) }}</td>
+				<td>{{ memswap.free|filesizeformat(binary = true) }}</td>
+				<td>{{ mem.free|filesizeformat(binary = true) }}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% endif %}
+    </article>
+  </section>
+  
+  <section id="secondline">
+    <section id="sideleft">
+      <article id="net">
+	{% if net is defined %}
+	<table >
+		<thead>
+			<tr>
+				<th scope="col" class="bgnet fgnet"></th>
+				<th scope="col" class="bgnet fgnet">Net Rx &darr;</th>
+				<th scope="col" class="bgnet fgnet">Net TX &uarr;</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for interface in net %}
+				<tr>
+					<td id="item">{{ interface.interface_name }}</td>
+					{% if interface.rx == 0 %}
+						<td>0</td>
+					{% else %}
+						<td>{{ (interface.rx*8)|filesizeformat(binary = true)|replace("Bytes", "bps")|replace("Byte", "bps")|replace("iB", "bps") }}</td>
+					{% endif %}
+					{% if interface.tx == 0 %}
+						<td>0</td>
+					{% else %}
+						<td>{{ (interface.tx*8)|filesizeformat(binary = true)|replace("Bytes", "bps")|replace("Byte", "bps")|replace("iB", "bps") }}</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+      </article>
+      <article id="diskio">
+	{% if diskio is defined %}
+	<table >
+		<thead>
+			<tr>
+				<th scope="col" class="bgdiskio fgdiskio"></th>
+				<th scope="col" class="bgdiskio fgdiskio">Disk Write &darr;</th>
+				<th scope="col" class="bgdiskio fgdiskio">Disk Read &uarr;</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for disk in diskio %}
+				<tr>
+					<td id="item">{{ disk.disk_name }}</td>
+					<td>{{ disk.write_bytes|filesizeformat(binary = true) }}</td>
+					<td>{{ disk.read_bytes|filesizeformat(binary = true) }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+      </article>
+      <article id="fs">
+	{% if fs is defined %}
+	<table >
+		<thead>
+			<tr>
+				<th scope="col" class="bgdiskio fgdiskio"></th>
+				<th scope="col" class="bgdiskio fgdiskio">FS Size</th>
+				<th scope="col" class="bgdiskio fgdiskio">FS Used</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for mount in fs %}
+				<tr>
+					<td id="item">{{ mount.mnt_point }}</td>
+					<td>{{ mount.size|filesizeformat(binary = true) }}</td>
+					<td class="{{ mount.used_color }}">{{ mount.used|filesizeformat(binary = true) }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+      </article>
+    </section>
+    <section id="sideright">
+      <!-- 
+      <article id="proccount">
+	{% if (proccount is defined) %}
+	<table>
+		<thead>
+			<tr>
+				<th scope="col" class="bgproc fgproc"></th>
+				<th scope="col" class="bgproc fgproc">Total</th>
+				<th scope="col" class="bgproc fgproc">Running</th>
+				<th scope="col" class="bgproc fgproc">Sleep</th>
+				<th scope="col" class="bgproc fgproc">Other</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td  id="item">Process</td>
+				<td>{{ proccount.total }}</td>
+				<td>{{ proccount.running }}</td>
+				<td>{{ proccount.sleeping }}</td>
+				<td>{{ proccount.total-proccount.running-proccount.sleeping }}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% endif %}
+      </article>
+      -->
+      
+      <article id="proclist">
+	{% if proclist is defined %}
+	<table >
+		<thead>
+			<tr>
+				<th scope="col" class="bgproc fgproc">CPU %</th>
+				<th scope="col" class="bgproc fgproc">Mem virt.</th>
+				<th scope="col" class="bgproc fgproc">Mem resi.</th>
+				<th scope="col" class="bgproc fgproc">Command</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for proc in proclist %}
+				<tr>
+					<td>{{ proc.cpu_percent }}</td>
+					<td>{{ proc.memory_info.vms|filesizeformat(binary = true) }}</td>
+					<td>{{ proc.memory_info.rss|filesizeformat(binary = true) }}</td>
+					<td id="command">{{ proc.name|truncate(40, killwords=True) }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+      </article>
+    </section>
+  </section>
+</section>
+  
+</div>
+{% endblock main %}

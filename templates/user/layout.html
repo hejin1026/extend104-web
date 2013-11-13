@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html xmlns="http://www.w3.org/1999/xhtml" class="ie8 wp-toolbar"  dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if !(IE 8) ]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" class="wp-toolbar" dir="ltr" lang="en-US"><!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'title' }}</title>
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/static/css/base.css" type="text/css" media="all" />
+
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.js"></script>
+
+    <script>$(function(){ $(".alert").alert() }); </script>
+
+
+</head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="{{ url_for('term.index') }}">电动汽车充换点站系统</a>
+            <ul class="nav pull-right">
+	          <li><a href="{{ url_for('user.signup') }}" {% if navid == 'signup' %} class="active" {% endif %}>注册</a></li>
+	          <li><a href="{{ url_for('user.login') }}" {% if navid == 'login' %} class="active" {% endif %}>登录</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="container">
+      <div style="width: 300px; margin: 0 auto;">
+        <div class="well">
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		  {% if messages %}
+		    {% for category, message in messages %}
+		        <div class="alert alert-{{ category }}">{{ message }}</div> 
+		    {% endfor %}
+		  {% endif %}
+		{% endwith %}
+		      
+	    {% block content %} {% endblock %}	  
+  
+        </div>
+      </div>
+	  
+      <div id="footer">
+		<center> <p>© 电动系统 2013</p> </center>
+      </div>
+	  
+	  <script type="text/javascript" src="http://chat.nextalk.im/run.js?theme=base&amp;domain=nextalk.im">
+    </div> <!-- container -->
+        
+  </body>
+</html>

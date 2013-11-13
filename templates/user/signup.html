@@ -1,0 +1,21 @@
+{% set navid = "signup" %}
+
+{% extends "user/layout.html" %}
+
+{% block content %}
+
+{% from "helper/_form.html" import render_field %}
+<form id="loginform" method="POST" action="{{ url_for('user.signup') }}" class="form" style="margin-left:0px;">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.username) }}
+    {{ render_field(form.password) }}
+    {{ render_field(form.password_ack) }}
+	{{ render_field(form.email) }}
+    <div class="form-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">注册</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}      
