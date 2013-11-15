@@ -5,8 +5,7 @@ import hashlib
 
 from flask_login import UserMixin
 
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+from db import db
 
 from datetime import datetime
 
@@ -22,12 +21,11 @@ class User(db.Model, UserMixin):
     
     def check_passwd(self, passwd):
         print 'self.password:', self.password, passwd
-        return self.password == passwd #User.crypted_password(passwd)            
+        return self.password == User.crypted_password(passwd)            
 
     @staticmethod
     def crypted_password(passwd):
-        return passwd
-        # return hashlib.sha256(passwd).hexdigest()
+        return hashlib.sha256(passwd).hexdigest()
         
     @staticmethod
     def authenticate(username, passwd):

@@ -55,11 +55,6 @@ def add_before(app):
             print 'app.before_request: ', request.endpoint, current_user.is_authenticated(), current_user.is_anonymous()
             return redirect(url_for('user.login', next=request.url))
     
-    # @app.after_request     
-    # def after_request(response):        
-    #     print 'app.after_request: ', request.endpoint, current_user.is_authenticated(), current_user.is_anonymous()
-    #     return response
-    
 
 # ==============================================================================
 #  Test running

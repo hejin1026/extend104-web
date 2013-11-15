@@ -92,10 +92,8 @@ def account():
         print 'form:', form.password.data, form.data
         user = User.query.get(current_user.id)    
         user.password = User.crypted_password(form.password.data)
-        user.email = "hejin@test.com"
-        # user.updated = datetime.now()
-        rs = db.session.commit()
-        print "db rs",db.session, rs
+        user.updated_at = datetime.now()
+        db.session.commit()
         flash(u"修改成功")
     else:
         flash(u"修改密码")    

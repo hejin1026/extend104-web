@@ -1,49 +1,22 @@
-
-
 {% extends "term/layout.html" %}
+
+{% block sidebar %}
+	<div class="pull-right">
+	  <div class="list-group">
+		{% for endpoint, label in [('term.protocol', '协议'),
+		                         ('term.channel', '通道'),
+								 ('term.type', '设备类型'),		                         
+		                         ('term.config', '指标配置')] %}
+		<a class= "list-group-item {% if request.endpoint==endpoint %}active{% endif %}" href="{{ url_for(endpoint) }}">{{ label }}</a>
+		{% endfor %}  
+	  </div>
+	</div>
+{% endblock sidebar %}
 
 
 {% block content %}
 
-	{% for s in station %}
-	<li><div> {{ s.name }} </div></li>
-	{% endfor %}
-	</ui>
-
-	<table class="table table-striped table-bordered table-hover" cellspacing="0">
-	    <thead>
-		<tr>
-			{% for column in table.columns %}
-		    <th >
-		     	{{ column }}
-		    </th>
-			{% endfor %}
-		</tr>
-	    </thead>
-    
-	    <tbody id="the-list" >
-		{% for row in table.rows %}
-		<tr>
-		   
-	            <td>{{ row.type.name }}</td>
-				<td>{{ row.no }}</td>
-				<td>{{ row.name }}</td>
-				<td>{{ row.measure_type}}</td>
-				<td>{{ row.measure_tag }}</td>
-				<td>{{ row.measure_coef }}</td>
-		 
-		</tr>
-	    {% else %}
-	    <tr>
-	        <td colspan="{{ table.columns|length - table.hiddens|length }}" class="colspanchange">
-	          <div class="alert alert-block" style="text-align:center;">
-	            <button type="button" class="close" data-dismiss="alert">×</button>
-	            当前没有数据
-	          </div>
-	        </td>
-	    </tr>
-		{% endfor %}
-	    </tbody>
-	</table>	
+{% from "helper/_table.html" import render_table  %}
+{{ render_table(table) }}
 
 {% endblock content %}

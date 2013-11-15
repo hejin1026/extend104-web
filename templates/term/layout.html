@@ -37,11 +37,13 @@
           <!-- navbar2-->
           <div class="collapse navbar-collapse" role="navigation">
 			<ul class="nav navbar-nav">
-			{% for endpoint, label in [('index', '首页'),
-			                           ('term.index', '设备管理'),
-			                           ('term.config', '配置管理'),
-			                           ('index', '系统监控')] %}
-			<li {% if endpoint==current %}class="active"{% endif %}>
+			{% set term_index = ('term.index','term.stake','term.station') %}
+			{% set config_index = ('term.type','term.channel','term.config', 'term.protocol') %}	
+			{% for endpoint, childs, label in [('index', ('index',), '首页'),
+			                           ('term.index', term_index, '设备管理'),
+			                           ('term.config', config_index, '配置管理'),
+			                           ('index', (), '系统监控')] %}
+			<li {% if request.endpoint in childs %}class="active"{% endif %}>
 			  <a href="{{ url_for(endpoint) }}">{{ label }}</a>
 			</li>
 			{% endfor %}  
