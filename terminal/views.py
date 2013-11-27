@@ -7,7 +7,9 @@ from flask_login import login_required, current_user
 
 from .models import *
 from .tables import *
-from .forms import StationForm
+from .forms import StationForm, YCMeasureForm
+
+import httplib
 
 bp = Blueprint('term', __name__)
 
@@ -20,15 +22,17 @@ def index():
     
     return redirect(url_for('term.station'))
     
-@bp.route('/term/websocket')
+@bp.route('/term/websocket', methods=['GET'])
 def websocket():
     sid = request.args.get('id', '') 
+    # if not sid:
+    webserver = 'ws://localhost:8080/websocket'   
     station = TermStation.query.get(sid)
     kwargs = {
-        'ip'    : station.ip,
-        'table' : table
+        'station'  : station,
+        'webserver': webserver
     }
-    return render_template('term/station.html', **kwargs)
+    return render_template('term/websocket.html', **kwargs)
     
 
 @bp.route('/term/station')
@@ -43,13 +47,15 @@ def station():
         count = Channel.query.filter(Channel.station_id==row.record.id).count()
         uri = url_for('term.channel', station_id=row.record.id)
         row.data['chanel_count'] = Markup(u"<a href=%s>%s</a>" % (uri, count))
+        uri = url_for('term.websocket', id=row.record.id)
+        row.data['websocket'] =  Markup(u"<a href=%s>%s</a>" % (uri, u'查看'))
         
     kwargs = {
         'table' : table
     }
-    return render_template('term/station.html', **kwargs)
+    return render_template('term/index.html', **kwargs)
     
-@bp.route('/term/station/show',  methods=['GET', 'POST'])
+@bp.route('/station/show',  methods=['GET', 'POST'])
 def station_show():
     sid = request.args.get('id', '') 
     form = StationForm()
@@ -79,8 +85,38 @@ def stake():
         'table' : table,
         'station' : station
     }
-    return render_template('term/stake.html', **kwargs)
+    return render_template('term/index.html', **kwargs)
+    
+@bp.route('/term/measure')
+def measure():    
+    query = Measure.query
+    table = MeasureTable(query).build(request, {})
+    kwargs = {
+        'table' : table
+    }
+    return render_template('term/index.html', **kwargs)
 
+@bp.route('/measure/show')
+def measure_show():
+    id = request.args.get('id', '') 
+    form = YCMeasureForm()
+    if id:
+        measure = Measure.query.filter(Measure.id==id).filter(Channel.channel_type==1).first()
+        print 'id:',id, form.name.default, measure.name
+        form.no.process_data(measure.no)
+        form.name.process_data(measure.name)
+        form.stake_name.process_data(measure.stake.name)
+        channel = measure.station.channel[0]
+        # form.curr_value.process_data()
+        conn = httplib.HTTPConnection("127.0.0.1:8080")
+        conn.request("GET","/measure?ip=%s&port=%s&measure_type=%s&measure_no=%s" %(channel.ip, channel.port, 1, 0) )
+        res = conn.getresponse()
+        data = res.read()
+        print 'data:',data,res.reason, res.status
+        
+    
+    flash(u"测点信息")
+    return render_template('term/measure.html', form = form)
 
 # term_config
 
@@ -108,9 +144,15 @@ def config():
 @bp.route('/term/channel')
 def channel():
     query = Channel.query
-    table = ChannelTable(query).build(request, {})
+    sid = request.args.get('station_id', None)
+    bread = []
+    if sid:
+        query = query.filter(Channel.station_id==sid)
+        bread.append((url_for('term.station', id=sid), query.first().station.name))
+    table = ChannelTable(query).build(request, {}) 
     
     kwargs = {
+        'bread' : bread,
         'table' : table
     }
     return render_template('term/config.html', **kwargs)    

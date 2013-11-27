@@ -16,6 +16,13 @@
 
 {% block content %}
 
+<ol class="breadcrumb">
+  {% for b in bread %}
+  <li><a href="{{b[0]}}">{{b[1]}}</a></li>
+  {% endfor %}
+  <li>test</li>
+</ol>
+
 {% from "helper/_table.html" import render_table  %}
 {{ render_table(table) }}
 

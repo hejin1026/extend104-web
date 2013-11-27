@@ -4,57 +4,17 @@
 {% block sidebar %}
 	<div class="pull-right">
 	  <div class="list-group">
-	    <a class="list-group-item active" href="{{ url_for('term.station') }}">充电站</a>
-	    <a class="list-group-item" href="{{ url_for('term.stake') }}">充电桩或车载终端</a>
+  		{% for endpoint, label in [('term.station', '充电站'),
+  		                         ('term.stake', '充电桩或车载终端'),
+  								 ('term.measure', '测点')] %}
+  		<a class= "list-group-item {% if request.endpoint==endpoint %}active{% endif %}" href="{{ url_for(endpoint) }}">{{ label }}</a>
+  		{% endfor %} 
 	  </div>
 	</div>
-
 {% endblock sidebar %}
 
-
 {% block content %}
-
-	<ui class="breadcrumb">
-		<li>充电站信息</li>
-		<li class="active">其他</li>
-	</ui>
-	<ul>
-	{% for s in station %}
-	<li><div> {{ s.name }} </div></li>
-	{% endfor %}
-	</ui>
-
-	<table class="table table-striped table-bordered table-hover" cellspacing="0">
-	    <thead>
-		<tr>
-			{% for column in table.columns %}
-		    <th >
-		     	{{ column }}
-		    </th>
-			{% endfor %}
-		</tr>
-	    </thead>
-    
-	    <tbody id="the-list" >
-		{% for row in table.rows %}
-		<tr>
-		   
-	            <td>{{ row.name }}</td>
-				<td>{{ row.address }}</td>
-				<td>{{ row.type.name}}</td>
-		 
-		</tr>
-	    {% else %}
-	    <tr>
-	        <td colspan="{{ table.columns|length - table.hiddens|length }}" class="colspanchange">
-	          <div class="alert alert-block" style="text-align:center;">
-	            <button type="button" class="close" data-dismiss="alert">×</button>
-	            当前没有数据
-	          </div>
-	        </td>
-	    </tr>
-		{% endfor %}
-	    </tbody>
-	</table>	
+{% from "helper/_table.html" import render_table  %}
+{{ render_table(table) }}
 
 {% endblock content %}

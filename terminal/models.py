@@ -36,12 +36,37 @@ class TermStake(db.Model):
     type = db.relationship('TermType', backref='stake_type')  
     station = db.relationship('TermStation', backref='stakes')    
     
+class Measure(db.Model):    
+    id          =   db.Column(db.Integer, primary_key=True)
+    no          =   db.Column(db.Integer)
+    category    =   db.Column(db.String(8))
+    stake_id    =   db.Column(db.Integer,  db.ForeignKey('term_stake.id'))
+    station_id  =   db.Column(db.Integer,  db.ForeignKey('term_station.id'))
+    tag         =   db.Column(db.String(8))
+    name        =   db.Column(db.String(64))
+    code        =   db.Column(db.String(64))
+    type        =   db.Column(db.Integer)
+    valid       =   db.Column(db.Integer)
+    unit        =   db.Column(db.String(8))
+    coef        =   db.Column(db.Float)
+    offset      =   db.Column(db.Float)
+    validUpLmt  =   db.Column(db.Float)
+    validDnLmt  =   db.Column(db.Float)
+    designValue =   db.Column(db.Float)
+    inverse     =   db.Column(db.Integer)
+    alarmGrade  =   db.Column(db.Integer)
+    flags       =   db.Column(db.Integer)
+    
+    station = db.relationship('TermStation',backref='mesure')
+    stake = db.relationship('TermStake',backref='mesure')
+    
+    
 class TermType(db.Model):    
     __tablename__ = 'term_type'
     id          =   db.Column(db.Integer, primary_key=True)
     code        =   db.Column(db.String(16))
     name        =   db.Column(db.String(64))
-    discr       =   db.Column(db.String(255))
+    desc        =   db.Column(db.String(255))
     manu        =   db.Column(db.String(32))
     created_at  =   db.Column(db.DateTime, default=datetime.now)
     updated_at  =   db.Column(db.DateTime)    

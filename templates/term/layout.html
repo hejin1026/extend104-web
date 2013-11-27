@@ -37,7 +37,7 @@
           <!-- navbar2-->
           <div class="collapse navbar-collapse" role="navigation">
 			<ul class="nav navbar-nav">
-			{% set term_index = ('term.index','term.stake','term.station') %}
+			{% set term_index = ('term.index','term.stake','term.station', 'term.measure') %}
 			{% set config_index = ('term.type','term.channel','term.config', 'term.protocol') %}	
 			{% for endpoint, childs, label in [('index', ('index',), '首页'),
 			                           ('term.index', term_index, '设备管理'),

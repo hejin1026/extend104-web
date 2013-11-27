@@ -13,7 +13,7 @@ class StationTable(t.Table):
     stake_count = t.LinkColumn(u'充电桩或终端',endpoint='term.stake')
     created_at  = t.DateTimeColumn(u'创建时间', orderable=True)
     chanel_count= t.Column(u'通道数量')
-    websocket   = t.Column(u'报文查看')
+    websocket   = t.Column(u'报文')
     
     class Meta:
         model = TermStation
@@ -24,6 +24,7 @@ class StakeTable(t.Table):
     address     = t.Column(u'地址')
     type_name   = t.Column(u'类型', accessor='type.name')
     station_name   = t.Column(u'所属站', accessor='station.name')
+    measure     = t.LinkColumn(u'所属测点', endpoint='term.measure')
     yc_start    = t.Column(u'遥测起始', accessor='yc_start') 
     yc_num      = t.Column(u'遥测总数') 
     yx_start    = t.Column(u'遥信起始') 
@@ -37,21 +38,35 @@ class StakeTable(t.Table):
     class Meta:
         model = TermStake       
         
+
+class MeasureTable(t.Table):
+    no          = t.LinkColumn(u'序号', endpoint='term.measure_show')
+    name        = t.Column(u'名称')
+    code        = t.Column(u'代号')
+    category    = t.Column(u'类别')
+    stake_name  = t.Column(u'所属终端', accessor='stake.name')
+    tag         = t.Column(u'标识')
+    type        = t.Column(u'类型')
+    valid       = t.EnumColumn(u'是否可用', '', enums={0:u'否', 1:u'是'}, orderable=True)
+        
+    class Meta:
+        model = Measure
+            
         
 class TypeTable(t.Table):       
     name        = t.Column(u'名称')
-    discr       = t.Column(u'描述')
+    desc        = t.Column(u'描述')
     
     class Meta:
         model = TermType
         
 class ConfigTable(t.Table):        
-    no          = t.Column(u'终端号')
+    no          = t.Column(u'序号')
     name        = t.Column(u'名称')
     type_name   = t.Column(u'终端类型',  accessor='type.name')
     measure_type    = t.Column(u'型号')
     measure_tag     = t.Column(u'标识')
-    measure_coef    = t.Column(u'偏移量')
+    measure_coef    = t.Column(u'系数')
     
     class Meta:
         model = TermConfig

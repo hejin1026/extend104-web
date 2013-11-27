@@ -60,6 +60,8 @@ class BoundRow(object):
             value = '/'.join(subvalues)
         elif name not in ['check']:
             try:
+                # TODO:defalut value
+                # print 'cell value:',self.record,bound_column.accessor
                 value = bound_column.accessor.resolve(self.record)
             except ValueError, e:
                 print e
