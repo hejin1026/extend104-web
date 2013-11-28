@@ -2,7 +2,7 @@
 
 
 /* ======== Struct ======== */
-#container {
+#content {
     padding-top: 72px;          /*fix `navbar-fixed-top` issue*/
 }
 

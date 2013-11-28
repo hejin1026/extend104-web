@@ -37,7 +37,7 @@ def config_login_mgr(app):
 def index():
     title = "test web"
     ''' 首页 '''
-    return redirect(url_for('term.index'))
+    return render_template('index.html')
     
 def config_sqlalchemy(app):
     db.init_app(app)
