@@ -1,0 +1,132 @@
+
+{% extends "term/layout.html" %}
+
+{% block head %} 
+<script type="text/javascript">
+  
+  var websocket;
+  $(document).ready(init);
+  
+  function init() {
+      if(!("WebSocket" in window)){  
+          $('#status').append('<p><span style="color: red;">websockets are not supported </span></p>');
+          $("#navigation").hide();  
+      } else {
+          $('#status').append('<p><span style="color: green;">websockets are supported </span></p>');
+          connect();
+      };
+          $("#connected").hide(); 	
+          // $("#content").hide(); 	
+  };
+
+  function connect()
+  {
+      wsHost = $("#server").val()
+      websocket = new WebSocket(wsHost);
+      showScreen('<b>Connecting to: ' +  wsHost + '</b>'); 
+      websocket.onopen = function(evt) { onOpen(evt) }; 
+      websocket.onclose = function(evt) { onClose(evt) }; 
+      websocket.onmessage = function(evt) { onMessage(evt) }; 
+      websocket.onerror = function(evt) { onError(evt) }; 
+	  
+  };  
+  
+  function disconnect() {
+      websocket.close();
+	   
+  }; 
+
+  function toggle_connection(){
+      if(websocket.readyState == websocket.OPEN){
+          disconnect();
+      } else {
+          connect(); 
+      };
+  };
+
+  function sendTxt(ip, port) {
+      if(websocket.readyState == websocket.OPEN){
+          txt = "connection/" + ip + ":" + port;
+          websocket.send(txt);
+          showScreen('sending: ' + txt); 
+      } else {
+           showScreen('websocket is not connected'); 
+      };
+  };
+
+  function onOpen(evt) { 
+      showScreen('<span style="color: green;">CONNECTED </span>'); 
+      $("#connected").fadeIn('slow');
+      $("#content").fadeIn('slow');
+	  $("#btnConn").html('停止');
+  };  
+
+  function onClose(evt) { 
+      showScreen('<span style="color: red;">DISCONNECTED </span>');
+	  $("#btnConn").html('启动');
+  };  
+
+  function onMessage(evt) { 
+      showScreen('<span style="color: blue;">RESPONSE: ' + evt.data+ '</span>'); 
+  };  
+
+  function onError(evt) {
+      showScreen('<span style="color: red;">ERROR: ' + evt.data+ '</span>');
+  };
+
+  function showScreen(txt) { 
+      $('#output').append('<p>' + txt + '</p>');
+  };
+
+  function clearScreen() 
+  { 
+      $('#output').html("");
+  };
+</script>
+
+{% endblock %}
+
+{% block sidebar %}
+	<div class="pull-right">
+	  <div class="list-group">
+	    <a class="list-group-item active" href="{{ url_for('term.station') }}">充电站</a>
+	    <a class="list-group-item" href="{{ url_for('term.stake') }}">充电桩或车载终端</a>
+	  </div>
+	</div>
+{% endblock sidebar %}
+
+{% block content %} 
+<div id="header">
+  <div id="status"></div>
+</div>
+
+<p id="connecting">
+<input type='text' id="server" value="{{ webserver }}"></input>
+<button id="btnConn" type="button" onclick="toggle_connection()">启动</button>
+</p>
+
+{% for channel in station.channel %}     
+<div class="form-group">
+    <h3>{% if channel.channel_type == 0 %}主{% else%}备{% endif%}通道信息: </h3>
+	<div>IP:{{ channel.ip }}</div>
+	<div>端口:{{ channel.port }}</div>
+	<div><button type="button" onclick="sendTxt('{{ channel.ip}}','{{ channel.port}}');">查看报文</button></div>
+</div>
+
+
+{% endfor %}
+
+
+
+<div id="navigation">
+  <div id="connected">				
+	<p>
+	  <button id="clear" onclick="clearScreen()" >Clear text</button>
+	</p>  	
+  </div>
+
+  <div id="content">						
+	  <div id="output"></div>
+  </div>
+</div>
+{% endblock %}      
