@@ -4,9 +4,9 @@
 	<div class="pull-right">
 	  <div class="list-group">
 		{% for endpoint, label in [('term.protocol', '协议'),
-		                         ('term.channel', '通道'),
-								 ('term.type', '设备类型'),		                         
-		                         ('term.config', '指标配置')] %}
+		('term.channel', '通道'),
+		('term.type', '设备类型'),		                         
+		('term.config', '指标配置')] %}
 		<a class= "list-group-item {% if request.endpoint==endpoint %}active{% endif %}" href="{{ url_for(endpoint) }}">{{ label }}</a>
 		{% endfor %}  
 	  </div>

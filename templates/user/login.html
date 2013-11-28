@@ -4,16 +4,18 @@
 {% block content %}
              
 {% from "helper/_form.html" import render_field %}
-<form id="loginform" method="POST" action="{{ url_for('user.login') }}" class="form" style="margin-left:0px;">
+<form id="loginform" method="POST"
+      action="{{ url_for('user.login')}}"
+      class="form-horizontal" style="margin-left:0px;">
   {{ form.hidden_tag() }}
   {{ render_field(form.username) }}
   {{ render_field(form.password) }}
-  <div class="control-group">
-    <div class="controls">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
       <label class="checkbox">
         {{ form.remember() }} 记住我
       </label>
-      <button type="submit" class="btn">登录</button>
+      <button type="submit" class="btn btn-success">登录</button>
     </div>
   </div>
 </form>
