@@ -9,7 +9,7 @@ import MySQLdb
 
 app = Flask(__name__)
 app.secret_key = '..... PUBLIC ....'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:public@localhost/extend104_new'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:public@192.168.1.111/extend104_new'
 
 from db import db
 

@@ -13,13 +13,13 @@
 {% block content %}      
 
 {% from "helper/_form.html" import render_field %}
-<form id="stationform" method="POST" action="{{ url_for('term.station_show') }}" class="form" style="margin-left:0px;">
+<form role="form" class="form-horizontal" id="stationform" method="POST" action="{{ url_for('term.station_show') }}" class="form" style="margin-left:0px;">
     {{ render_field(form.name) }}
     {{ render_field(form.address) }}
     {{ render_field(form.type) }}
 	
     <div class="form-group">
-        <div class="controls">
+        <div class="col-sm-offset-2 col-sm-10">
           <button type="submit" class="btn btn-success">确定</button>
         </div>
     </div>

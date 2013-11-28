@@ -1,4 +1,6 @@
 
+
+
 /* ======== Struct ======== */
 #container {
     padding-top: 72px;          /*fix `navbar-fixed-top` issue*/
@@ -29,4 +31,8 @@
 /* ========= ======== */
 .clear {
     clear: both;
+}
+
+.col-md-3 .pull-right {
+    width: 210px;
 }
