@@ -14,6 +14,8 @@
 {% endblock sidebar %}
 
 {% block content %}
+        <a href="{{ url_for('term.station_new') }}"
+           class="btn btn-success"> 新建</a>
 {% from "helper/_table.html" import render_table  %}
 {{ render_table(table) }}
 

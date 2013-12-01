@@ -19,7 +19,7 @@ class Action(object):
         self.icon = icon
         self.url = url
 
-        css_class = 'btn btn-small '
+        css_class = 'btn btn-small btn-default '
         if modalable:
             css_class += 'modal-btn'
         default_attrs = Attrs(a={'class': css_class})

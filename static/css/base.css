@@ -36,3 +36,37 @@
 .col-md-3 .pull-right {
     width: 210px;
 }
+
+/**** Table Action ******/
+/* tr { */
+/*     display: table-row; */
+/*     position: relative; */
+/* } */
+
+/* div .row-actions { */
+/*     display: none; */
+/*     position: absolute; */
+/*     /\* right : 100%; *\/ */
+/*     /\* visibility: hidden; *\/ */
+/*     /\* position: absolute; *\/ */
+/*     /\* margin: 0; *\/ */
+/*     margin-top: -8px; */
+/*     margin-left: 0; */
+/*     width: 0; */
+/* /\* left: 140px; *\/ */
+/* } */
+
+/* .row-actions .btn-group { */
+/*     float: right; */
+/*     margin-right: 100%; */
+/* } */
+
+/* .row-actions .btn-small { */
+/*     padding:3px 3px; */
+/* } */
+
+/* tr:hover .row-actions { */
+/*     display: table-cell; */
+/* /\* visibility: visible *\/ */
+/* } */
+

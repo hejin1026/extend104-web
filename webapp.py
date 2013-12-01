@@ -56,12 +56,12 @@ def add_before(app):
             return redirect(url_for('user.login', next=request.url))
     
 
+register_blueprints(app)
+config_login_mgr(app)
+add_before(app)
+config_sqlalchemy(app)
 # ==============================================================================
 #  Test running
 # ==============================================================================    
 if __name__ == '__main__':
-    register_blueprints(app)
-    config_login_mgr(app)
-    add_before(app)
-    config_sqlalchemy(app)
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8090, debug=True)

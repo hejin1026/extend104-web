@@ -7,6 +7,13 @@ from .models import *
 
 
 class StationTable(t.Table):
+    
+    show = t.Action(name=u'查看', endpoint='term.station_show')
+    edit = t.Action(name=u'编辑', endpoint='term.station_edit')
+    delete = t.Action(name=u'删除', endpoint='term.station_del')
+
+    check = t.CheckBoxColumn()
+    
     name        = t.LinkColumn(u'名称',endpoint='term.station_show')
     address     = t.Column(u'地址')
     type_name   = t.Column(u'类型', accessor='type.name')

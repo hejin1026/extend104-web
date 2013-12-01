@@ -54,6 +54,19 @@ def station():
         'table' : table
     }
     return render_template('term/index.html', **kwargs)
+
+
+
+    
+# ==============================================================================
+#  BEGIN:: Examples
+# ==============================================================================    
+@bp.route('/station/new')
+def station_new():
+    form = StationForm()
+    flash(u"站点信息")
+    return render_template('term/show.html', form = form)
+
     
 @bp.route('/station/show',  methods=['GET', 'POST'])
 def station_show():
@@ -67,7 +80,33 @@ def station_show():
         form.type.process_data(station.type.name)
         
     flash(u"站点信息")
-    return render_template('term/show.html', form = form)    
+    return render_template('term/show.html', form = form)
+    
+
+@bp.route('/station/edit', methods=['GET', 'POST'])
+def station_edit():
+    sid = request.args.get('id', '') 
+    form = StationForm()
+    if sid:
+        station = TermStation.query.get(sid)
+        print 'sid:',sid, form.name.default, station.name
+        form.name.process_data(station.name)
+        form.address.process_data(station.address)
+        form.type.process_data(station.type.name)
+        
+    flash(u"站点信息")
+    return render_template('term/show.html', form = form)
+    
+@bp.route('/station/delete')
+def station_del():
+    return 'Delete'
+    
+# ==============================================================================
+#  END:: Examples
+# ==============================================================================    
+
+    
+
 
 @bp.route('/term/stake')
 def stake():

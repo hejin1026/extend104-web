@@ -81,10 +81,10 @@
     <tbody id="the-list" >
 	{% for row in table.rows %}
 	<tr>
-	    {% for column, cell, cellattrs in row.items %}
-	    {% if column.is_checkbox %}
-            <th {{ column.attrs.th.as_html(scope="row") }} >
-              {% if table.actions %}
+	  {% for column, cell, cellattrs in row.items %}
+	  {% if column.is_checkbox %}
+          <th {{ column.attrs.th.as_html(scope="row") }} >
+            {% if table.actions %}
             <div class="row-actions">
               <div class="btn-group">
                 {% for action in table.actions %}
@@ -94,12 +94,12 @@
               </div>
             </div>
             {% endif %}
-            {{ cell if cell else '' }}
-            </th>
-	    {% else %}
-            <td {{ column.attrs.td.as_html(**cellattrs) }}>{{ cell if (cell or cell == 0)  else '' }}</td>
-	    {% endif %}
-	    {% endfor %}
+            <!-- {{ cell if cell else '' }} -->
+          </th>
+	  {% else %}
+          <td {{ column.attrs.td.as_html(**cellattrs) }}>{{ cell if (cell or cell == 0)  else '' }}</td>
+	  {% endif %}
+	  {% endfor %}
 	</tr>
     {% else %}
     <tr>
@@ -114,4 +114,5 @@
     </tbody>
 </table>
 {% if table.page_obj.total  %}{{ render_paginate(table.page_obj, table.page_url) }}{% endif %}
+
 {%- endmacro %}
